@@ -1,0 +1,19 @@
+spring:
+  main:
+    banner-mode: OFF
+  datasource:
+    url: jdbc:h2:mem:testdb
+    password: password
+    username: sa
+
+logging:
+  level:
+    root: OFF
+    org:
+      springframework: OFF
+
+setting:
+  service:
+    internal:
+      name: 'Service bpm'
+      key: INTERNAL_KEY

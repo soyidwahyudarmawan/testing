@@ -1,0 +1,69 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    driverClassName: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+setting:
+  service:
+    internal:
+      name: 'Service bpm'
+      key: INTERNAL_KEY
+
+plugin.identity.keycloak:
+  keycloakIssuerUrl: http://${KEYCLOAK_HOST}:${KEYCLOAK_PORT}/keycloak/realms/bpm
+  keycloakAdminUrl: http://${KEYCLOAK_HOST}:${KEYCLOAK_PORT}/keycloak/admin/realms/bpm
+  clientId: ${KEYCLOAK_SERVICE_CLIENT_NAME}
+  clientSecret: ${KEYCLOAK_SERVICE_CLIENT_SECRET}
+  useEmailAsCamundaUserId: true
+  administratorGroupName: bpm-admin
+
+keycloak:
+  auth-server-url: https://microservices.dev.bravo.bfi.co.id/keycloak/
+  realm: bpm
+  resource: ${KEYCLOAK_SERVICE_CLIENT_NAME}
+  ssl-required: external
+  credentials:
+    secret: ${KEYCLOAK_SERVICE_CLIENT_SECRET}
+
+server:
+  cors:
+    origins:
+      - https://microservices.dev.bravo.bfi.co.id
+      - https://surveyor.dev.bravo.bfi.co.id/
+
+google:
+  cloud:
+    storage:
+      url: https://storage.cloud.google.com
+      file-key: bravo-project-nonprod-2a603152518c.json
+      project-id: bravo-project-nonprod
+      bucket-name: asset-document-test
+
+logging:
+  level:
+    org:
+      apache:
+        http: DEBUG
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql: trace
+      springframework:
+        security: DEBUG
+        web:
+          client:
+            RestTemplate: DEBUG

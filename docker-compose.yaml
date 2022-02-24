@@ -1,0 +1,59 @@
+version: "3.8"
+services:
+  appdb:
+    image: postgres
+    ports:
+      - "5430:5432"
+    environment:
+      POSTGRES_DB: bpm
+      POSTGRES_USER: bpm
+      POSTGRES_PASSWORD: bpm
+  keycloakdb:
+    image: postgres
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+  keycloak:
+    image: bitnami/keycloak:latest
+#    jboss/keycloak:15.1.1
+    ports:
+      # Keycloak
+      - "8180:8080"
+    volumes:
+      - ${PWD}/keycloak/bpm-realm-V15.json:/tmp/realm.json
+    environment:
+      KEYCLOAK_USER: keycloak
+      KEYCLOAK_PASSWORD: keycloak
+      DB_VENDOR: POSTGRES
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+      DB_ADDR: keycloakdb
+      DB_PORT: 5432
+      KEYCLOAK_IMPORT: /tmp/realm.json
+      KEYCLOAK_FRONTEND_URL: http://localhost:8180/auth
+    links:
+      - keycloakdb
+    depends_on:
+      - keycloakdb
+  bpm:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    environment:
+      JAVA_OPTS: -DXmx1g
+      SPRING_PROFILES_ACTIVE: default,local-standalone
+      DB_ADDR: appdb
+      DB_NAME: bpm
+      DB_USER: bpm
+      DB_PASSWORD: bpm
+    links:
+      - appdb
+      - keycloak
+    depends_on:
+      - appdb
+      - keycloak

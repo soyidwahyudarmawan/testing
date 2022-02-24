@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5430/bpm
+    driverClassName: org.postgresql.Driver
+    username: bpm
+    password: bpm
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+setting:
+  service:
+    internal:
+      name: 'Service bpm'
+      key: INTERNAL_KEY
+
+plugin.identity.keycloak:
+  keycloakIssuerUrl: http://localhost:8180/auth/realms/bpm
+  keycloakAdminUrl: http://localhost:8180/auth/admin/realms/bpm
+  clientId: bpm-identity-service
+  clientSecret: lQmvUNgENOI7HczddXJ5Nl3Homg2pTJW
+  useUsernameAsCamundaUserId: true
+  administratorGroupName: bpm-admin
+
+keycloak:
+  auth-server-url: http://localhost:8180/auth/
+  realm: bpm
+  resource: bpm-identity-service
+  ssl-required: external
+  credentials:
+    secret: SECRET_VAL
+
+server:
+  port: 8087
+  cors:
+    origins:
+      - http://localhost:3000
+
+google:
+  cloud:
+    storage:
+      url: https://storage.cloud.google.com
+      file-key: /Users/yosefsamuel/Documents/bravo-project-nonprod-2a603152518c.json
+      project-id: bravo-project-nonprod
+      bucket-name: asset-document-test
